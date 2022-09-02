@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/articles
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        generate_statistics: false
+        jdbc:
+          batch_size: 1000
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        connection:
+          characterEncoding: utf-8
+          CharSet: utf-8
+          useUnicode: true
+security:
+  jwt:
+    token:
+      secret: sEcrEt
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  tomcat:
+    uri-encoding: UTF-8
