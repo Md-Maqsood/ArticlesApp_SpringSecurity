@@ -41,9 +41,9 @@ public class Article {
 	
 	@ManyToOne	
 	@JoinColumn(name = "author")
-	private User author; 
+	private User author;
 	
 	@Column(name = "created_on")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdOn; 
+	private Date createdOn;
 }

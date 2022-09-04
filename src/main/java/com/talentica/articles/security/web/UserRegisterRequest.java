@@ -1,12 +1,18 @@
-package com.talentica.articles.security.infra.DTO;
+package com.talentica.articles.security.web;
 
-import lombok.AllArgsConstructor;
+import org.springframework.lang.NonNull;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class UserRegisterRequest {
+	
+	@NonNull
 	private String username;
+	
+	@NonNull
 	private String password;
+	
+	@NonNull
 	private Integer role;
 }

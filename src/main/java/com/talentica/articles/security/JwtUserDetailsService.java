@@ -1,5 +1,6 @@
 package com.talentica.articles.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,19 +10,21 @@ import org.springframework.stereotype.Service;
 import com.talentica.articles.security.infra.RoleRepository;
 import com.talentica.articles.security.infra.User;
 import com.talentica.articles.security.infra.UserRepository;
-import com.talentica.articles.security.infra.DTO.UserRegisterRequest;
-import com.talentica.articles.security.infra.DTO.UserRegisterResponse;
+import com.talentica.articles.security.web.UserRegisterRequest;
+import com.talentica.articles.security.web.UserRegisterResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService{
 	
+	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
 	private RoleRepository roleRepository;
 	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	public UserRegisterResponse save(UserRegisterRequest userRegisterRequest) {

@@ -1,4 +1,4 @@
-package com.talentica.articles.security.infra.DTO;
+package com.talentica.articles.security.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
