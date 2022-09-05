@@ -61,13 +61,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
 		httpSecurity.authorizeRequests()
-					.antMatchers("/api/auth/login","/api/auth/register").permitAll()
-					.antMatchers("/api/article/read/**").hasAnyAuthority("ROLE_USER","ROLE_AUTHOR","ROLE_ADMIN")
-					.antMatchers("/api/article/edit/**").hasAnyAuthority("ROLE_AUTHOR","ROLE_ADMIN")
-					.antMatchers("/api/article/create").hasAnyAuthority("ROLE_AUTHOR","ROLE_ADMIN")
-					.antMatchers("/api/article/delete").hasAnyAuthority("ROLE_AUTHOR","ROLE_ADMIN")
-					.antMatchers("/api/deleteUser/**").hasAnyAuthority("ROLE_ADMIN")
-					.antMatchers("/api/changeRole").hasAnyAuthority("ROLE_ADMIN")
+					.antMatchers("/api/auth/login","/api/auth/register","/api/article/authors").permitAll()
+					.antMatchers("/api/article/read/**","/api/article/list").hasAnyAuthority("ROLE_USER","ROLE_AUTHOR","ROLE_ADMIN")
+					.antMatchers("/api/article/edit/**","/api/article/create").hasAnyAuthority("ROLE_AUTHOR","ROLE_ADMIN")
+					.antMatchers("/api/auth/deleteUser/**","/api/auth/changeRole","/api/article/delete/**").hasAnyAuthority("ROLE_ADMIN")
 					.anyRequest().authenticated();
 					
 		httpSecurity.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

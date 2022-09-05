@@ -1,6 +1,6 @@
 package com.talentica.articles.article.web;
 
-import org.springframework.lang.NonNull;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleCreateRequest {
-	
+public class ArticleResponse {
+	private Integer id;
 	private String subject;
-	
 	private String body;
-	
-	@NonNull
-	private Integer author;
+	private AuthorResponse author;
+	private Date createdOn; 
 }

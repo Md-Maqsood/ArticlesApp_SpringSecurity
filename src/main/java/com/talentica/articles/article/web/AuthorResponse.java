@@ -1,7 +1,5 @@
 package com.talentica.articles.article.web;
 
-import org.springframework.lang.NonNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,12 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleCreateRequest {
-	
-	private String subject;
-	
-	private String body;
-	
-	@NonNull
-	private Integer author;
+public class AuthorResponse {
+	private Integer id;
+	private String username;
 }
