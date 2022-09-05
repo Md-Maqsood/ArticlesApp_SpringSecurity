@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.talentica.articles.security.infra.Role;
 import com.talentica.articles.security.infra.RoleRepository;
 import com.talentica.articles.security.infra.User;
 import com.talentica.articles.security.infra.UserRepository;
@@ -32,7 +33,7 @@ public class JwtUserDetailsService implements UserDetailsService{
 		user.setUsername(userRegisterRequest.getUsername());
 		user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
 		user.setUsername(userRegisterRequest.getUsername());
-		user.setRole(roleRepository.findById(userRegisterRequest.getRole()).orElse(null));
+		user.setRole(roleRepository.findById(userRegisterRequest.getRole()).orElse(roleRepository.findById(1).orElse(new Role(1,"ROLE_USER"))));
 		User savedUser = userRepository.save(user);
 		return new UserRegisterResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getRole().getName());
 	}

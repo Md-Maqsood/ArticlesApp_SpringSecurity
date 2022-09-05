@@ -1,9 +1,9 @@
 package com.talentica.articles.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,10 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -31,7 +29,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	private  JwtUserDetailsService jwtUserDetailsService;
 	
 	@Autowired
-	private  CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+	@Qualifier("customAuthenticationEntryPoint")
+	private  AuthenticationEntryPoint customAuthenticationEntryPoint;
+	
+	@Autowired
+	@Qualifier("customAccessDeniedHandler")
+	private  AccessDeniedHandler customAccessDeniedHandler;
 	
 	@Bean
 	public JwtTokenFilter jwtTokenFilter() {
@@ -59,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		httpSecurity.csrf().disable();
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		httpSecurity.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
+		httpSecurity.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler).authenticationEntryPoint(customAuthenticationEntryPoint);
 		httpSecurity.authorizeRequests()
 					.antMatchers("/api/auth/login","/api/auth/register","/api/article/authors").permitAll()
 					.antMatchers("/api/article/read/**","/api/article/list").hasAnyAuthority("ROLE_USER","ROLE_AUTHOR","ROLE_ADMIN")

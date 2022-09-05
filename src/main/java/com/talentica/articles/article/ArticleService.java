@@ -44,8 +44,8 @@ public class ArticleService {
 				() -> new AccessDeniedException("You do not have authority to create article")
 			).getAuthority(); 
 		Integer userIdCurrentUser = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
-		if((!(roleCurrentUser.equals("ROLE-ADMIN")) && (!userIdCurrentUser.equals(articleCreateRequest.getAuthor())))){
-			new AccessDeniedException("You do not have authority to create article in name of another user");
+		if((!roleCurrentUser.equals("ROLE_ADMIN")) && (!userIdCurrentUser.equals(articleCreateRequest.getAuthor()))){
+			throw new AccessDeniedException("You do not have authority to create article in name of another user");
 		}
 		User author = userRepository.findById(articleCreateRequest.getAuthor()).orElseThrow(
 						()-> new UserNotFoundException(String.format("No author found with the id %s",articleCreateRequest.getAuthor()))
