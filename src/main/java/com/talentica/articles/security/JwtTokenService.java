@@ -1,9 +1,7 @@
 package com.talentica.articles.security;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -14,19 +12,26 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.talentica.articles.exception.JwtTokenException;
+
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenService {
 
-	private static final long ACCESS_TOKEN_EXPIRE_TIME = 15*60*60*1000;
-	
+	private static final long ACCESS_TOKEN_EXPIRE_TIME = 24*60*60*1000;
+		
 	public static final String ROLES = "ROLES";
 	
 	public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -39,7 +44,12 @@ public class JwtTokenService {
 	private final JwtUserDetailsService jwtUserDetailsService;
 	
 	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		try {
+			return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
+				| IllegalArgumentException e) {
+			throw new JwtTokenException("Invalid Access Token");
+		}
 	}
 	
 	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -72,15 +82,17 @@ public class JwtTokenService {
 		
 		Date now = new Date();
 		
-		return Jwts.builder()
-					.setClaims(claims)
-					.setIssuedAt(now)
-					.setExpiration(new Date(now.getTime()+ACCESS_TOKEN_EXPIRE_TIME))
-					.signWith(SignatureAlgorithm.HS512, secret)
-					.compact();
+		String accessToken = Jwts.builder()
+							.setClaims(claims)
+							.setIssuedAt(now)
+							.setExpiration(new Date(now.getTime()+ACCESS_TOKEN_EXPIRE_TIME))
+							.signWith(SignatureAlgorithm.HS512, secret)
+							.compact();
+		
+		return accessToken;
 	}
 	
-	public Authentication getAuthenticationFromToken(String token) {
+	public Authentication getAuthenticationFromToken(String token) throws UsernameNotFoundException {
 		UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(getUsernameFromToken(token));
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}

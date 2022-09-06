@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ArticleCreateRequest {
 	
+	@NonNull
 	private String subject;
 	
 	private String body;

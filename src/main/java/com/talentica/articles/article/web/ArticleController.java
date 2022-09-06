@@ -30,37 +30,37 @@ public class ArticleController {
 	private ArticleService articleService;
 	
 	@PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<ArticleResponse> createArticle(@RequestBody ArticleCreateRequest articleCreateRequest){
+	public ResponseEntity<ArticleResponse> createArticle(@RequestBody ArticleCreateRequest articleCreateRequest) throws Exception{
 		log.info("Processing request for create article");
 		return ResponseEntity.ok(articleService.createArticle(articleCreateRequest));
 	}
 	
 	@PutMapping(value = "/edit/{articleId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<ArticleResponse> updateArticle(@RequestBody ArticleCreateRequest articleUpdateRequest, @PathVariable Integer articleId){
+	public ResponseEntity<ArticleResponse> updateArticle(@RequestBody ArticleCreateRequest articleUpdateRequest, @PathVariable Integer articleId) throws Exception{
 		log.info("Processing request for edit article for article {}", articleId);
 		return ResponseEntity.ok(articleService.updateArticle(articleId, articleUpdateRequest));
 	}
 	
 	@GetMapping(value = "/read/{articleId}")
-	public ResponseEntity<ArticleResponse> getArticle(@PathVariable Integer articleId){
+	public ResponseEntity<ArticleResponse> getArticle(@PathVariable Integer articleId) throws Exception{
 		log.info("Processing request for read article for article {}", articleId);
 		return ResponseEntity.ok(articleService.getArticleById(articleId));
 	}
 	
 	@DeleteMapping(value = "delete/{articleId}")
-	public ResponseEntity<Boolean> deleteArticle(@PathVariable Integer articleId){
+	public ResponseEntity<Boolean> deleteArticle(@PathVariable Integer articleId) throws Exception{
 		log.info("Processing request for delete article for article {}", articleId);
 		return ResponseEntity.ok(articleService.deleteArticle(articleId));
 	}
 	
 	@GetMapping(value = "/authors")
-	public ResponseEntity<List<AuthorResponse>> getAllAuthors(){
+	public ResponseEntity<List<AuthorResponse>> getAllAuthors() throws Exception{
 		log.info("Processing request for getting all authors");
 		return ResponseEntity.ok(articleService.getAllAuthors());
 	}
 	
 	@GetMapping(value = "/list")
-	public ResponseEntity<List<ArticleResponse>> getArticlesByAuthor(@RequestParam Integer authorUserId){
+	public ResponseEntity<List<ArticleResponse>> getArticlesByAuthor(@RequestParam Integer authorUserId) throws Exception{
 		log.info("Processing request for getting all articles for the author");
 		return ResponseEntity.ok(articleService.getArticlesByAuthor(authorUserId));
 	}

@@ -6,7 +6,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import com.talentica.articles.exception.InvalidRequestException;
 import com.talentica.articles.security.infra.Role;
 import com.talentica.articles.security.infra.RoleRepository;
 import com.talentica.articles.security.infra.User;
@@ -29,6 +32,9 @@ public class JwtUserDetailsService implements UserDetailsService{
 	private PasswordEncoder passwordEncoder;
 	
 	public UserRegisterResponse save(UserRegisterRequest userRegisterRequest) {
+		if(userRepository.findByUsername(userRegisterRequest.getUsername()).isPresent()) {
+			throw new InvalidRequestException("Username already present");
+		}
 		User user = new User();
 		user.setUsername(userRegisterRequest.getUsername());
 		user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));

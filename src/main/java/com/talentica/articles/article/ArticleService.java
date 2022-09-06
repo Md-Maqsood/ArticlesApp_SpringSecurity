@@ -45,7 +45,7 @@ public class ArticleService {
 			).getAuthority(); 
 		Integer userIdCurrentUser = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
 		if((!roleCurrentUser.equals("ROLE_ADMIN")) && (!userIdCurrentUser.equals(articleCreateRequest.getAuthor()))){
-			throw new AccessDeniedException("You do not have authority to create article in name of another user");
+			throw new AccessDeniedException("You do not have authority to create article in name of another author");
 		}
 		User author = userRepository.findById(articleCreateRequest.getAuthor()).orElseThrow(
 						()-> new UserNotFoundException(String.format("No author found with the id %s",articleCreateRequest.getAuthor()))
@@ -77,7 +77,7 @@ public class ArticleService {
 				);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String roleCurrentUser = authentication.getAuthorities().stream().findFirst().orElseThrow(
-				() -> new AccessDeniedException("You do not have authority to edit article")
+				() -> new AccessDeniedException("You do not have authority to edit this article")
 			).getAuthority(); 
 		if(roleCurrentUser.equals("ROLE_ADMIN")) {
 			if(!author.getRole().getId().equals(2)) {
@@ -111,7 +111,7 @@ public class ArticleService {
 		throw new AccessDeniedException("You do not have authority to edit the article");
 	}
 
-	public ArticleResponse getArticleById(Integer articleId) {
+	public ArticleResponse getArticleById(Integer articleId) throws RuntimeException {
 		Article article = articleRepository.findById(articleId).orElseThrow(
 				() -> new ArticleNotFoundException(String.format("No article found with the id", articleId))
 			);
@@ -123,7 +123,7 @@ public class ArticleService {
 				);
 	}
 
-	public Boolean deleteArticle(Integer articleId) {
+	public Boolean deleteArticle(Integer articleId) throws RuntimeException {
 		Article article = articleRepository.findById(articleId).orElseThrow(
 				() -> new ArticleNotFoundException(String.format("No article found with the id", articleId))
 			);
@@ -139,7 +139,7 @@ public class ArticleService {
 							.collect(Collectors.toList());
 	}
 	
-	public List<ArticleResponse> getArticlesByAuthor(Integer authorUserId){
+	public List<ArticleResponse> getArticlesByAuthor(Integer authorUserId) throws RuntimeException {
 		User author = userRepository.findById(authorUserId).orElseThrow(
 				()-> new UserNotFoundException(String.format("No author found with the id %s",authorUserId))
 				);

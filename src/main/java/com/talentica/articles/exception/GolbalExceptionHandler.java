@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,15 +39,15 @@ public class GolbalExceptionHandler extends ResponseEntityExceptionHandler{
 																new HashMap<String, Object>()));
 	}
 	
-	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request){
+	@ExceptionHandler({UserNotFoundException.class, InvalidRequestException.class})
+	public ResponseEntity<Object> handleUserNotFoundException(RuntimeException ex, WebRequest request){
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(400,
 																ex.getMessage(),
 																new HashMap<String, Object>()));
 	}
 	
 	@ExceptionHandler(AuthenticationException.class)
-	public ResponseEntity<Object> handleAuthenTicationException(AuthenticationException ex, WebRequest request){
+	public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request){
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(401,
 																ex.getMessage(),
 																new HashMap<String, Object>()));

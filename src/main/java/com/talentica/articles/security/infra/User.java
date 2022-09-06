@@ -27,14 +27,14 @@ public class User {
 	@SequenceGenerator(name = "user_id", allocationSize = 1)
 	private Integer id;
 	
-	@Column(name = "username")
+	@Column(name = "username", unique = true, nullable = false)
 	private String username;
 	
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	private String password;
 	
 	@ManyToOne
-	@JoinColumn(name = "role")
+	@JoinColumn(name = "role", nullable = false)
 	private Role role;
 	
 }
