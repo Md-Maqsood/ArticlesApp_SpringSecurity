@@ -7,10 +7,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.talentica.articles.exception.InvalidRequestException;
 import com.talentica.articles.exception.UserNotFoundException;
+import com.talentica.articles.security.infra.Role;
 import com.talentica.articles.security.infra.RoleRepository;
 import com.talentica.articles.security.infra.User;
 import com.talentica.articles.security.infra.UserRepository;
+import com.talentica.articles.security.web.ChangeRoleRequest;
 import com.talentica.articles.security.web.JwtTokenResponse;
 import com.talentica.articles.security.web.UserLoginRequest;
 import com.talentica.articles.security.web.UserRegisterRequest;
@@ -60,5 +63,18 @@ public class AuthService {
 		userRepository.delete(user);
 		log.info("Deleted user {}",userId);
 		return true;				
+	}
+
+	public Boolean changeRoleOfUser(ChangeRoleRequest changeRoleRequest) {
+		User user = userRepository.findById(changeRoleRequest.getUserId()).orElseThrow(
+				() -> new UserNotFoundException(String.format("User with user id %s does not exist", changeRoleRequest.getUserId()))
+				);
+		Role newRole = roleRepository.findById(changeRoleRequest.getNewRoleId()).orElseThrow(
+				() -> new InvalidRequestException("The new role not found")
+				);
+		user.setRole(newRole);
+		userRepository.save(user);
+		log.info("Role of user {} changed to {}",user.getUsername(), user.getRole().getName());
+		return true;
 	}
 }

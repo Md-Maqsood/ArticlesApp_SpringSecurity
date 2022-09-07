@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,4 +46,11 @@ public class AuthController {
 		log.info("Processing delete user request for user {}",userId);
 		return ResponseEntity.ok(authService.deleteUser(userId));
 	}
+	
+	@PutMapping(value="/changeRole", consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Boolean> changeRoleOfUser(@RequestBody ChangeRoleRequest changeRoleRequest){
+		log.info("Processing request for changing role of user {} to {}",changeRoleRequest.getUserId(), changeRoleRequest.getNewRoleId());
+		return ResponseEntity.ok(authService.changeRoleOfUser(changeRoleRequest));
+	}
+	
 }
